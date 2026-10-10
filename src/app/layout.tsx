@@ -8,9 +8,8 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "NittoNova",
-  description:
-    "Nitto Nova is your trusted destination for innovative gadgets and smart home essentials.",
+  title: "Template",
+  description: "Template",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
