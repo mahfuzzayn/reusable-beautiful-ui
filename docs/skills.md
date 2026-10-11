@@ -70,6 +70,51 @@ An original, from-scratch component kit: **10 reusable blue-gradient buttons** i
 - **Tokens:** `@theme inline` in `globals.css` — `--color-canvas/panel/line`, `--animate-aurora`, `conic-ring` `@utility`
 - Lesson: Tailwind v4 canonical names (`bg-linear-to-r`, `bg-size-[…]`, `mask-[…]`) are what this toolchain's linter expects — the `bg-gradient-*`/`bg-[length:*]` spellings trigger deprecation warnings.
 
+### 4. CRM Admin Dashboard — overview page replication (`dashboard-design-01` branch)
+
+A faithful rebuild of a 2017-era "CRM Admin Dashboard" admin template (the reference shot in `public/images/CRM-01.jpeg`) — black sidebar, navy utility strip, teal stat tiles, and light-gray "window" panels on a `#ececec` canvas.
+
+- **Type:** Roboto (UI) + Great Vibes (the stock-template watermark) via `next/font`
+- **Chrome:** near-black fixed sidebar with 30 nav links (source spellings kept: `payroll`, `Calender`), navy `#2a3f54` strip with badged cart/mail/bell/clipboard icons + gear + avatar, white header with teal gauge roundel ("CRM Admin Dashboard / Very detailed & featured admin.")
+- **Cards:** Upcoming Events (navy/teal date chips + teal action pills), Running Projects (status pills + hairline progress bars), Pending Works, Works Deadlines / Works Announcements / Notice Board (tables with `#d9edf7` highlighted rows), This Year Earnings & Expenses + Weekly Earnings (hand-rolled SVG bar charts, dashed gridlines, 0–90 axis), Google Map (hand-drawn inline-SVG world map with pin + info card), Calender (JUL 2017 grid, teal today circle, yellow event dots), script watermark + copyright footer
+- **Responsive:** sidebar → off-canvas drawer below `lg`, tiles 2×2 → 4-up, card rows 1-col → 2-equal (`md`) → 2fr/1fr (`xl`)
+- Structure: `src/components/dashboard/` (Panel, Pill, DateChip, ProgressBar, BarChart, WorldMap) + `src/blocks/dashboard/` (shell, sidebar, topbar, stat-tiles, list-panels, charts-row, bottom-row) + all content in `src/data/dashboard.ts`
+
+**Forensics lesson:** the vision tool hallucinated an entire modern-CRM design when given the full reference image. Ground truth came from splitting the image into bands and tight per-card crops (consistent across passes), plus direct pixel sampling for exact colors (`#2a3f54`, `#009688`, `#ececec`, `#d9edf7`, `#bdc3c7`, bootstrap badge colors) and geometry (sidebar 18.8% of width, ~50/50 card columns for rows 1–3, ~68/32 for rows 4–5). Never trust a single whole-image description when crops + pixels can confirm.
+
+### 5. Donezo — task-management dashboard study (`main` branch)
+
+A faithful static replication of a **"Donezo" task-management dashboard overview** (reference: a 736×552 Muzli-blog inspiration JPEG, the only asset — no live site existed to inspect). Only the Overview page works; all sidebar destinations are decorative. Built entirely server-side — zero client JS.
+
+- **Type:** Google Sans Flex (variable 100–900, self-hosted via `next/font`) — swapped in over the initial Poppins pick; a two-file change (`layout.tsx` variable + `--font-sans` in `globals.css`)
+- **Palette:** canvas `#F4F6F5`, white cards, primary green `#227D52`, deep green `#1E5B3C` (stat card 1, app banner, Time Tracker gradient), bright green `#41B970`, mist `#A6DFC0`, orange `#F0A435`
+- **Structure:** 248px sidebar (MENU/GENERAL nav, active pill, badge, phone-mock download banner) → sticky topbar (search, bell, Invite, avatar) → 4 stat cards (first is deep green) → 12-col grid `5/4/3` at `xl` (Tasks overview chart / Reminders + Weekly Plan donut / Project tasks + Time Tracker), 2-col at `md`, stacked with a pill-nav below `lg`
+- **Charts, hand-rolled SVG:** grouped bars (7 day-pairs, rounded data-ends, square baseline, hairline grid, dashed orange "vs last month" line), donut (74% = Products 49 + On Hold 25, arc offsets computed as pure `slice`/`reduce` sums), progress meters
+- **Content:** every string/value lives in `src/data/dashboard.ts` — 46 rendered strings verified by curl against the built page
+
+#### How the study was done (replication from a thumbnail, not a live site)
+
+The NittoNova flow starts at rendered HTML; here step one was **reconstructing the reference itself**:
+
+1. **Region-by-region vision extraction** — upscale the JPEG 8–22×, crop ~25 tight regions (sidebar, header, each stat card + its caption strip, chart title, each column band), transcribe each separately. Keep only readings confirmed by **≥2 independent passes** — single passes hallucinated confidently ("My Schedule" card and "74% Weekly Goal vs 41% Project Progress" both appeared once and nowhere else).
+2. **Deterministic pixel forensics to settle contested layout** — where transcripts disagreed, decide by code, not eyes: color clustering (found the exact green families + which elements share them), white-fraction row/column scans (card gutters → 3 columns × 2 rows, col A stacks three cards), edge probes (separated the Muzli screenshot's white matte from real UI), point color probes (confirmed the near-black-green Time Tracker sits bottom of column 3).
+3. **Rebuild as original components** — tokens in `globals.css`, blocks in `src/blocks/dashboard/`, data in `src/data/`; nav links are `href="#"` placeholders.
+4. **Verify like the NittoNova flow, plus visual checks** — `npm run build` (types + fonts + prerender), curl 46 expected strings, headless-Chrome screenshots at 1440px and 390px, pixel-verify the chart hues actually render, mobile horizontal-overflow probe, and a side-by-side reference-vs-ours comparison.
+5. **Dataviz discipline carried over** — palette run through the CVD validator (adjacent-pair ΔE passes; the light-green step knowingly sits outside the categorical lightness band because the reference owns the palette — covered with legend labels, a value axis, and `<title>` values on every bar), thin marks, solid hairline grid, `tabular-nums` only in the timer.
+
+#### Our output vs the reference
+
+- **Matched:** full card structure and grid, exact palette families, all visible copy (headings, names, dates, times, badge "16", 01:24:08), chart forms (bar pairs per day, donut proportions, meters), responsive behavior
+- **Scored ~82/100 in a blind side-by-side vision comparison** — the residual gap is micro-spacing, the Time Tracker's wavy texture (we used gradient + rings instead), and details that were simply unreadable at thumbnail resolution (a few caption texts and small icon shapes are best-consensus, not certain)
+- **Caught and fixed during review:** stat numbers resized to 36px; one green gotcha below
+
+#### Lessons added to the pile
+
+- **React Compiler forbids mutation during render** (`react-hooks/immutability`): the donut's running `offset += len` accumulator inside `.map()` was rejected — precompute cumulative starts with `slice().reduce()` instead.
+- **Canonical Tailwind v4 classes again:** the IDE linter asks for `pl-62` over `pl-[248px]` and `max-w-290` over `max-w-[1160px]` — arbitrary values that land on the 4px scale should use scale names.
+- **Never screenshot a stale `next start`**: a prod server that survived a rebuild served mismatched HTML/CSS and rendered a garbage green wall; always restart the server before visual verification, and sanity-check the screenshot's color histogram (canvas gray present) before trusting it.
+- **Font swaps are cheap when tokens are respected** — one variable + one `--font-sans` line moved the whole page from Poppins to Google Sans Flex (~44k pixels re-rendered, verified by diff).
+
 ## Where this goes next
 
 - More **replication studies** of other websites — each one teaches a different design vocabulary (e-commerce, SaaS, editorial, dashboard…)
