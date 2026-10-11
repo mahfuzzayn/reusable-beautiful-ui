@@ -1,28 +1,35 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   NittoNova design tokens
-   Warm cream canvas, signature orange primary, Jost type.
+   Donezo dashboard tokens
+   Light gray-green canvas, white cards, deep green brand, warm orange accent.
    --------------------------------------------------------------------------- */
 
-:root {
-  --primary-color: #f26507;
-}
-
 @theme inline {
-  --font-sans: var(--font-jost), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", sans-serif;
+  --font-sans: var(--font-google-sans-flex), ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
 
-  --color-primary: var(--primary-color);
-  --color-cream: #fff9f3;
-  --color-cream-deep: #fef5ef;
-  --color-cream-border: #fbeadf;
-  --color-topbar: #323232;
+  --color-canvas: #f4f6f5;
+  --color-surface: #ffffff;
+  --color-line: #e8ede9;
+
+  --color-ink: #1d2b23;
+  --color-ink-2: #5f6b64;
+  --color-ink-3: #939c96;
+
+  --color-primary: #227d52;
+  --color-primary-deep: #1e5b3c;
+  --color-primary-bright: #41b970;
+  --color-primary-soft: #e3f8ea;
+  --color-primary-mist: #a6dfc0;
+
+  --color-accent: #f0a435;
+  --color-accent-soft: #fef0e0;
 }
 
 @layer base {
   body {
-    @apply bg-cream font-sans text-zinc-900 antialiased;
+    @apply bg-canvas font-sans text-ink antialiased;
   }
 }
 

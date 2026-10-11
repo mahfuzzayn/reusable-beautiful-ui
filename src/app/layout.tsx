@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { Jost } from "next/font/google";
+import { Google_Sans_Flex } from "next/font/google";
 import "./globals.css";
 
-const jost = Jost({
+const googleSansFlex = Google_Sans_Flex({
   subsets: ["latin"],
-  variable: "--font-jost",
+  variable: "--font-google-sans-flex",
 });
 
 export const metadata: Metadata = {
-  title: "Template",
-  description: "Template",
+  title: "Donezo — Task Management Dashboard",
+  description:
+    "Overview dashboard of the Donezo task management app: projects, tasks, reminders and team activity.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${jost.variable} h-full`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${googleSansFlex.variable} h-full`}>
+      <body className="min-h-full">{children}</body>
     </html>
   );
 }
