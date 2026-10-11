@@ -1,35 +1,63 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   NittoNova design tokens
-   Warm cream canvas, signature orange primary, Jost type.
+   CRM Admin Dashboard tokens (replication study of CRM-01)
+   2017-era admin template: near-black sidebar, navy utility strip, teal
+   accents, light-gray window panels on a #ececec canvas.
    --------------------------------------------------------------------------- */
 
 :root {
-  --primary-color: #f26507;
+  --navy: #2a3f54;
+  --ink: #060b0f;
+  --teal: #009688;
 }
 
 @theme inline {
-  --font-sans: var(--font-jost), ui-sans-serif, system-ui, -apple-system,
+  --font-sans: var(--font-roboto), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
+  --font-script: var(--font-vibes), cursive;
 
-  --color-primary: var(--primary-color);
-  --color-cream: #fff9f3;
-  --color-cream-deep: #fef5ef;
-  --color-cream-border: #fbeadf;
-  --color-topbar: #323232;
+  /* surfaces */
+  --color-page: #ececec;
+  --color-panel: #ffffff;
+  --color-panel-head: #e9ebee;
+  --color-panel-line: #e2e2e2;
+  --color-row-line: #ededed;
+  --color-row-hl: #d9edf7;
+
+  /* chrome */
+  --color-navy: var(--navy);
+  --color-ink: var(--ink);
+  --color-teal: var(--teal);
+  --color-bar-gray: #bdc3c7;
+
+  /* status (bootstrap-era palette the template uses) */
+  --color-ok: #5cb85c;
+  --color-warn: #f0ad4e;
+  --color-bad: #d9534f;
+  --color-info: #337ab7;
+
+  /* text */
+  --color-dark: #333333;
+  --color-body: #555555;
+  --color-muted: #999999;
 }
 
 @layer base {
   body {
-    @apply bg-cream font-sans text-zinc-900 antialiased;
+    @apply bg-page font-sans text-dark antialiased;
   }
 }
 
-@utility scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* Thin light scrollbar for the tall sidebar menu */
+@utility sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #2c343a transparent;
   &::-webkit-scrollbar {
-    display: none;
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #2c343a;
+    border-radius: 3px;
   }
 }

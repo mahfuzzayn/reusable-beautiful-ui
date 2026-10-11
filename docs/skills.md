@@ -70,6 +70,18 @@ An original, from-scratch component kit: **10 reusable blue-gradient buttons** i
 - **Tokens:** `@theme inline` in `globals.css` — `--color-canvas/panel/line`, `--animate-aurora`, `conic-ring` `@utility`
 - Lesson: Tailwind v4 canonical names (`bg-linear-to-r`, `bg-size-[…]`, `mask-[…]`) are what this toolchain's linter expects — the `bg-gradient-*`/`bg-[length:*]` spellings trigger deprecation warnings.
 
+### 4. CRM Admin Dashboard — overview page replication (`dashboard-design-01` branch)
+
+A faithful rebuild of a 2017-era "CRM Admin Dashboard" admin template (the reference shot in `public/images/CRM-01.jpeg`) — black sidebar, navy utility strip, teal stat tiles, and light-gray "window" panels on a `#ececec` canvas.
+
+- **Type:** Roboto (UI) + Great Vibes (the stock-template watermark) via `next/font`
+- **Chrome:** near-black fixed sidebar with 30 nav links (source spellings kept: `payroll`, `Calender`), navy `#2a3f54` strip with badged cart/mail/bell/clipboard icons + gear + avatar, white header with teal gauge roundel ("CRM Admin Dashboard / Very detailed & featured admin.")
+- **Cards:** Upcoming Events (navy/teal date chips + teal action pills), Running Projects (status pills + hairline progress bars), Pending Works, Works Deadlines / Works Announcements / Notice Board (tables with `#d9edf7` highlighted rows), This Year Earnings & Expenses + Weekly Earnings (hand-rolled SVG bar charts, dashed gridlines, 0–90 axis), Google Map (hand-drawn inline-SVG world map with pin + info card), Calender (JUL 2017 grid, teal today circle, yellow event dots), script watermark + copyright footer
+- **Responsive:** sidebar → off-canvas drawer below `lg`, tiles 2×2 → 4-up, card rows 1-col → 2-equal (`md`) → 2fr/1fr (`xl`)
+- Structure: `src/components/dashboard/` (Panel, Pill, DateChip, ProgressBar, BarChart, WorldMap) + `src/blocks/dashboard/` (shell, sidebar, topbar, stat-tiles, list-panels, charts-row, bottom-row) + all content in `src/data/dashboard.ts`
+
+**Forensics lesson:** the vision tool hallucinated an entire modern-CRM design when given the full reference image. Ground truth came from splitting the image into bands and tight per-card crops (consistent across passes), plus direct pixel sampling for exact colors (`#2a3f54`, `#009688`, `#ececec`, `#d9edf7`, `#bdc3c7`, bootstrap badge colors) and geometry (sidebar 18.8% of width, ~50/50 card columns for rows 1–3, ~68/32 for rows 4–5). Never trust a single whole-image description when crops + pixels can confirm.
+
 ## Where this goes next
 
 - More **replication studies** of other websites — each one teaches a different design vocabulary (e-commerce, SaaS, editorial, dashboard…)
